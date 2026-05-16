@@ -1,0 +1,339 @@
+/* ── Header ─────────────────────────────────────────────── */
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.settings-header__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.settings-header__title h1 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: #0f0f0f;
+}
+
+.settings-icon {
+  color: #1565c0;
+  font-size: 26px !important;
+}
+
+.settings-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: #606060;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.settings-back-link:hover { color: #0f0f0f; }
+
+.settings-auth-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: #606060;
+  font-size: 14px;
+}
+
+/* ── Content wrapper ─────────────────────────────────────── */
+.settings-content {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+}
+
+/* ── Status / loading ────────────────────────────────────── */
+.settings-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 80px 20px;
+  color: #606060;
+  text-align: center;
+}
+
+.settings-status.error { color: #b71c1c; }
+
+.settings-status .material-icons {
+  font-size: 52px !important;
+  color: #bdbdbd;
+}
+
+.settings-status.error .material-icons { color: #e57373; }
+
+.settings-login-link {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 8px 20px;
+  background: #065fd4;
+  color: #fff;
+  border-radius: 20px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.settings-login-link:hover { background: #0553b5; }
+
+/* ── Toast ───────────────────────────────────────────────── */
+.settings-toast {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.settings-toast.success {
+  background: #e8f5e9;
+  color: #1b5e20;
+}
+
+.settings-toast.error {
+  background: #ffebee;
+  color: #b71c1c;
+}
+
+.settings-toast .material-icons { font-size: 20px !important; }
+
+/* ── Card ────────────────────────────────────────────────── */
+.settings-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* ── Section ─────────────────────────────────────────────── */
+.settings-section {
+  padding: 24px 28px;
+}
+
+.settings-section__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.settings-section__header .material-icons {
+  color: #1565c0;
+  font-size: 22px !important;
+}
+
+.settings-section__header h2 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f0f0f;
+  margin: 0;
+}
+
+.settings-divider {
+  border: none;
+  border-top: 1px solid #f0f0f0;
+  margin: 0;
+}
+
+/* ── Field ───────────────────────────────────────────────── */
+.settings-field {
+  margin-bottom: 18px;
+}
+
+.settings-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #3c3c3c;
+  margin-bottom: 10px;
+}
+
+/* ── Theme buttons ───────────────────────────────────────── */
+.settings-theme-options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.settings-theme-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 22px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  background: #fafafa;
+  color: #3c3c3c;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+  min-width: 90px;
+}
+
+.settings-theme-btn .material-icons { font-size: 24px !important; }
+
+.settings-theme-btn:hover {
+  border-color: #1565c0;
+  background: #e8f0fe;
+  color: #1565c0;
+}
+
+.settings-theme-btn.active {
+  border-color: #1565c0;
+  background: #e8f0fe;
+  color: #1565c0;
+}
+
+/* ── Select ──────────────────────────────────────────────── */
+.settings-select {
+  width: 100%;
+  max-width: 280px;
+  padding: 9px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #0f0f0f;
+  background: #fff;
+  appearance: auto;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.settings-select:focus {
+  outline: none;
+  border-color: #1565c0;
+}
+
+/* ── Toggle row ──────────────────────────────────────────── */
+.settings-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.settings-toggle-row + .settings-toggle-row {
+  border-top: 1px solid #f5f5f5;
+}
+
+.settings-toggle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.settings-toggle-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #0f0f0f;
+}
+
+.settings-toggle-desc {
+  font-size: 12px;
+  color: #606060;
+}
+
+/* ── Toggle switch ───────────────────────────────────────── */
+.settings-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.settings-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.settings-slider {
+  position: absolute;
+  inset: 0;
+  background: #ccc;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.settings-slider::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 3px;
+  bottom: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.settings-switch input:checked + .settings-slider {
+  background: #1565c0;
+}
+
+.settings-switch input:checked + .settings-slider::before {
+  transform: translateX(20px);
+}
+
+/* ── Save button ──────────���──────────────────────────────── */
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.settings-save-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 28px;
+  background: #065fd4;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.settings-save-btn:hover:not(:disabled) { background: #0553b5; }
+
+.settings-save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.settings-save-btn .material-icons { font-size: 18px !important; }
+
+/* ── Spinner ─────────────────────────────────────────────── */
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+

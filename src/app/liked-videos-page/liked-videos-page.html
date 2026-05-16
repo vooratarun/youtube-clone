@@ -1,0 +1,77 @@
+<!-- Header -->
+<div class="liked-header">
+  <div class="liked-header__left">
+    <a routerLink="/" class="back-link">
+      <i class="material-icons">arrow_back</i>
+      Home
+    </a>
+  </div>
+  <div class="liked-header__title">
+    <i class="material-icons liked-icon">thumb_up</i>
+    <h1>Liked Videos</h1>
+  </div>
+  <div class="liked-header__right">
+    <a class="header__auth-link" [routerLink]="authRoute">
+      <i class="material-icons">account_circle</i>
+      <span>{{ authLabel }} ({{ authUsername }})</span>
+    </a>
+  </div>
+</div>
+
+<!-- Content -->
+<div class="liked-content">
+  @if (isLoading()) {
+    <div class="liked-status">
+      <i class="material-icons spinning">sync</i>
+      <p>Loading liked videos...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="liked-status error">
+      <i class="material-icons">error_outline</i>
+      <p>{{ errorMessage() }}</p>
+      <a routerLink="/login" class="login-link">Log in</a>
+    </div>
+  } @else if (!likedVideos().length) {
+    <div class="liked-status">
+      <i class="material-icons empty-icon">thumb_up_off_alt</i>
+      <p>No liked videos yet.</p>
+      <a routerLink="/" class="back-link">Browse videos</a>
+    </div>
+  } @else {
+    <div class="liked-count">{{ likedVideos().length }} video{{ likedVideos().length !== 1 ? 's' : '' }}</div>
+    @if (unlikeErrorMessage()) {
+      <p class="liked-unlike-error">{{ unlikeErrorMessage() }}</p>
+    }
+    <div class="liked-grid">
+      @for (video of likedVideos(); track video.id) {
+        <div class="liked-video-card">
+          <a class="liked-video-thumbnail" [routerLink]="['/video', video.id]">
+            <img [src]="video.thumbnailUrl" [alt]="video.title" />
+            <div class="liked-overlay">
+              <i class="material-icons">play_circle_filled</i>
+            </div>
+          </a>
+          <div class="liked-video-info">
+            <img class="liked-author-img" [src]="video.authorImageUrl" [alt]="video.channelName" />
+            <div class="liked-video-text">
+              <a class="liked-video-title" [routerLink]="['/video', video.id]">{{ video.title }}</a>
+              <span class="liked-channel">{{ video.channelName }}</span>
+              <span class="liked-meta">{{ video.meta }}</span>
+              @if (video.category || video.categoryName) {
+                <span class="liked-category-badge">{{ video.category || video.categoryName }}</span>
+              }
+            </div>
+            <div class="liked-video-actions">
+              <button
+                class="liked-unlike-btn"
+                [disabled]="pendingUnlikeVideoId() !== null"
+                (click)="onUnlikeVideo(video.id)">
+                {{ pendingUnlikeVideoId() === video.id ? 'Removing...' : 'Unlike' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

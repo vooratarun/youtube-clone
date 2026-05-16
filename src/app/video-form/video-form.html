@@ -1,0 +1,50 @@
+<form class="video-form" [formGroup]="videoForm" (ngSubmit)="onSubmit()">
+  <h2>{{ formTitle }}</h2>
+
+  <label>
+    Thumbnail URL
+    <input type="text" formControlName="thumbnailUrl" placeholder="https://..." />
+  </label>
+
+  <label>
+    Video Source URL
+    <input type="text" formControlName="videoSourceUrl" placeholder="https://..." />
+  </label>
+
+  <label>
+    Author Image URL
+    <input type="text" formControlName="authorImageUrl" placeholder="https://..." />
+  </label>
+
+  <label>
+    Video Title
+    <input type="text" formControlName="title" placeholder="Video title" />
+  </label>
+
+  <label>
+    Channel Name
+    <input type="text" formControlName="channelName" placeholder="Channel name" />
+  </label>
+
+  <label>
+    Category
+    <select formControlName="categoryId" [disabled]="isLoadingCategories">
+      @if (isLoadingCategories) {
+        <option [ngValue]="0">Loading categories...</option>
+      }
+      @for (category of categories; track category.id) {
+        <option [ngValue]="category.id">{{ category.name }}</option>
+      }
+    </select>
+  </label>
+
+  <label>
+    Meta (views and date)
+    <input type="text" formControlName="meta" placeholder="10K views • 2 days ago" />
+  </label>
+
+  <button type="submit" [disabled]="isSubmitting">
+    {{ submitButtonText }}
+  </button>
+</form>
+

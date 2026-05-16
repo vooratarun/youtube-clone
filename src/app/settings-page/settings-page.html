@@ -1,0 +1,161 @@
+<div class="settings-page">
+
+  <!-- Header -->
+  <div class="settings-header">
+    <div class="settings-header__left">
+      <a routerLink="/" class="settings-back-link">
+        <i class="material-icons">arrow_back</i>
+        Home
+      </a>
+    </div>
+    <div class="settings-header__title">
+      <i class="material-icons settings-icon">settings</i>
+      <h1>Settings</h1>
+    </div>
+    <div class="settings-header__right">
+      <a class="settings-auth-link" [routerLink]="authRoute()">
+        <i class="material-icons">account_circle</i>
+        <span>{{ authLabel() }} ({{ authUsername() }})</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="settings-content">
+
+    @if (isLoading()) {
+      <div class="settings-status">
+        <i class="material-icons spinning">sync</i>
+        <p>Loading settings…</p>
+      </div>
+    } @else if (errorMessage() && !isSaving()) {
+      <div class="settings-status error">
+        <i class="material-icons">error_outline</i>
+        <p>{{ errorMessage() }}</p>
+        @if (!authRoute().includes('logout')) {
+          <a routerLink="/login" class="settings-login-link">Log in</a>
+        }
+      </div>
+    } @else {
+
+      @if (successMessage()) {
+        <div class="settings-toast success">
+          <i class="material-icons">check_circle</i>
+          {{ successMessage() }}
+        </div>
+      }
+      @if (errorMessage()) {
+        <div class="settings-toast error">
+          <i class="material-icons">error_outline</i>
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <div class="settings-card">
+
+        <!-- Appearance -->
+        <section class="settings-section">
+          <div class="settings-section__header">
+            <i class="material-icons">palette</i>
+            <h2>Appearance</h2>
+          </div>
+
+          <div class="settings-field">
+            <label class="settings-label">Theme</label>
+            <div class="settings-theme-options">
+              @for (opt of themeOptions; track opt.value) {
+                <button
+                  class="settings-theme-btn"
+                  [class.active]="theme() === opt.value"
+                  (click)="onThemeSelect(opt.value)"
+                  type="button"
+                >
+                  <i class="material-icons">{{ opt.icon }}</i>
+                  <span>{{ opt.label }}</span>
+                </button>
+              }
+            </div>
+          </div>
+
+          <div class="settings-field">
+            <label class="settings-label" for="language">Language</label>
+            <select id="language" class="settings-select" [ngModel]="language()" (ngModelChange)="language.set($event)">
+              @for (opt of languageOptions; track opt.value) {
+                <option [value]="opt.value">{{ opt.label }}</option>
+              }
+            </select>
+          </div>
+        </section>
+
+        <hr class="settings-divider" />
+
+        <!-- Playback -->
+        <section class="settings-section">
+          <div class="settings-section__header">
+            <i class="material-icons">play_circle</i>
+            <h2>Playback</h2>
+          </div>
+
+          <div class="settings-toggle-row">
+            <div class="settings-toggle-info">
+              <span class="settings-toggle-label">Autoplay</span>
+              <span class="settings-toggle-desc">Automatically play the next video</span>
+            </div>
+            <label class="settings-switch">
+              <input type="checkbox" [ngModel]="autoplay()" (ngModelChange)="autoplay.set($event)" />
+              <span class="settings-slider"></span>
+            </label>
+          </div>
+        </section>
+
+        <hr class="settings-divider" />
+
+        <!-- Notifications -->
+        <section class="settings-section">
+          <div class="settings-section__header">
+            <i class="material-icons">notifications</i>
+            <h2>Notifications</h2>
+          </div>
+
+          <div class="settings-toggle-row">
+            <div class="settings-toggle-info">
+              <span class="settings-toggle-label">Email Notifications</span>
+              <span class="settings-toggle-desc">Receive updates via email</span>
+            </div>
+            <label class="settings-switch">
+              <input type="checkbox" [ngModel]="emailNotifications()" (ngModelChange)="emailNotifications.set($event)" />
+              <span class="settings-slider"></span>
+            </label>
+          </div>
+
+          <div class="settings-toggle-row">
+            <div class="settings-toggle-info">
+              <span class="settings-toggle-label">Push Notifications</span>
+              <span class="settings-toggle-desc">Receive browser push notifications</span>
+            </div>
+            <label class="settings-switch">
+              <input type="checkbox" [ngModel]="pushNotifications()" (ngModelChange)="pushNotifications.set($event)" />
+              <span class="settings-slider"></span>
+            </label>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Save button -->
+      <div class="settings-actions">
+        <button class="settings-save-btn" [disabled]="isSaving()" (click)="onSave()">
+          @if (isSaving()) {
+            <i class="material-icons spinning">sync</i>
+            Saving…
+          } @else {
+            <i class="material-icons">save</i>
+            Save Settings
+          }
+        </button>
+      </div>
+
+    }
+  </div>
+</div>
+

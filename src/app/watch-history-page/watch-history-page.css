@@ -1,0 +1,236 @@
+/* Header */
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.history-header__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.history-header__title h1 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: #0f0f0f;
+}
+
+.history-icon {
+  color: #1565c0;
+  font-size: 26px !important;
+}
+
+.history-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: #606060;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.history-back-link:hover {
+  color: #0f0f0f;
+}
+
+.history-auth-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: #606060;
+  font-size: 14px;
+}
+
+/* Content */
+.history-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 24px 40px;
+}
+
+.history-count {
+  font-size: 14px;
+  color: #606060;
+  margin-bottom: 16px;
+}
+
+.history-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 80px 20px;
+  color: #606060;
+  text-align: center;
+}
+
+.history-status.error {
+  color: #b71c1c;
+}
+
+.history-status .material-icons {
+  font-size: 56px !important;
+  color: #bdbdbd;
+}
+
+.history-status.error .material-icons {
+  color: #e57373;
+}
+
+.history-empty-icon {
+  font-size: 56px !important;
+  color: #bdbdbd;
+}
+
+.history-login-link {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 8px 20px;
+  background: #065fd4;
+  color: #fff;
+  border-radius: 20px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.history-login-link:hover {
+  background: #0553b5;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.history-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.history-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.history-card:hover {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.14);
+  transform: translateY(-2px);
+}
+
+.history-card__thumbnail {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.history-card__thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s;
+}
+
+.history-card:hover .history-card__thumbnail img {
+  transform: scale(1.03);
+}
+
+.history-card__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0);
+  transition: background 0.2s;
+}
+
+.history-card:hover .history-card__overlay {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.history-card__overlay .material-icons {
+  font-size: 36px !important;
+  color: rgba(255, 255, 255, 0);
+  transition: color 0.2s;
+}
+
+.history-card:hover .history-card__overlay .material-icons {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.history-card__body {
+  display: flex;
+  gap: 8px;
+  padding: 8px 10px;
+}
+
+.history-card__author {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.history-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.history-card__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f0f0f;
+  margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.history-card__channel,
+.history-card__meta,
+.history-card__watched-at {
+  font-size: 11px;
+  color: #606060;
+  margin: 0;
+}
+
+.history-card__category {
+  display: inline-block;
+  background: #f0f0f0;
+  color: #0f0f0f;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 500;
+  width: fit-content;
+}
+

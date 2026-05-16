@@ -1,0 +1,177 @@
+<!-- Header -->
+<div class="pl-header">
+  <div class="pl-header__left">
+    <a routerLink="/" class="pl-back-link">
+      <i class="material-icons">arrow_back</i>
+      Home
+    </a>
+  </div>
+  <div class="pl-header__title">
+    <i class="material-icons pl-icon">playlist_play</i>
+    <h1>My Playlists</h1>
+  </div>
+  <div class="pl-header__right">
+    <button class="pl-new-btn" (click)="openDialog()">
+      <i class="material-icons">add</i>
+      New Playlist
+    </button>
+    <a class="pl-auth-link" [routerLink]="authRoute">
+      <i class="material-icons">account_circle</i>
+      <span>{{ authLabel }} ({{ authUsername }})</span>
+    </a>
+  </div>
+</div>
+
+<!-- Content -->
+<div class="pl-content">
+  @if (isLoading) {
+    <div class="pl-status">
+      <i class="material-icons spinning">sync</i>
+      <p>Loading playlists...</p>
+    </div>
+  } @else if (errorMessage) {
+    <div class="pl-status error">
+      <i class="material-icons">error_outline</i>
+      <p>{{ errorMessage }}</p>
+      <a routerLink="/login" class="pl-login-link">Log in</a>
+    </div>
+  } @else if (!playlists.length) {
+    <div class="pl-status">
+      <i class="material-icons pl-empty-icon">playlist_add</i>
+      <p>No playlists yet.</p>
+      <a routerLink="/" class="pl-back-link">Browse videos</a>
+    </div>
+  } @else {
+    <p class="pl-count">{{ playlists.length }} playlist{{ playlists.length !== 1 ? 's' : '' }}</p>
+    @if (deleteError) {
+      <p class="pl-delete-error">{{ deleteError }}</p>
+    }
+
+    <div class="pl-list">
+      @for (playlist of playlists; track playlist.id) {
+        <div class="pl-section">
+
+          <!-- Playlist heading row -->
+          <div class="pl-section__header">
+            <div class="pl-section__title-group">
+              <i class="material-icons pl-section__icon">queue_music</i>
+              <div>
+                <h2 class="pl-section__name">{{ playlist.name }}</h2>
+                @if (playlist.description) {
+                  <p class="pl-section__desc">{{ playlist.description }}</p>
+                }
+              </div>
+            </div>
+            <div class="pl-section__actions">
+              <span class="pl-section__count">
+                {{ playlist.videoIds.length }} video{{ playlist.videoIds.length !== 1 ? 's' : '' }}
+              </span>
+              <button
+                class="pl-delete-btn"
+                [disabled]="playlist.isDeleting"
+                (click)="onDeletePlaylist(playlist)">
+                <i class="material-icons">delete</i>
+                {{ playlist.isDeleting ? 'Deleting...' : 'Delete' }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Horizontal video strip -->
+          @if (playlist.isLoadingVideos) {
+            <p class="pl-videos-status">
+              <i class="material-icons spinning">sync</i> Loading videos...
+            </p>
+          } @else if (!playlist.videos.length && playlist.videoIds.length === 0) {
+            <p class="pl-videos-status">No videos in this playlist.</p>
+          } @else if (!playlist.videos.length) {
+            <p class="pl-videos-status">Could not load videos.</p>
+          } @else {
+            @if (playlist.removeVideoError) {
+              <p class="pl-remove-video-error">{{ playlist.removeVideoError }}</p>
+            }
+            <div class="pl-video-strip">
+              @for (video of playlist.videos; track video.id) {
+                <div class="pl-video-card">
+                  <button
+                    class="pl-video-remove-btn"
+                    [disabled]="isRemovingVideo(playlist, video.id)"
+                    (click)="onRemoveVideoFromPlaylist($event, playlist, video)">
+                    <i class="material-icons">close</i>
+                    {{ isRemovingVideo(playlist, video.id) ? 'Removing...' : 'Remove' }}
+                  </button>
+
+                  <a class="pl-video-card__link" [routerLink]="['/video', video.id]">
+                    <div class="pl-video-card__thumb">
+                      <img [src]="video.thumbnailUrl" [alt]="video.title" />
+                      <div class="pl-video-card__overlay">
+                        <i class="material-icons">play_circle_filled</i>
+                      </div>
+                    </div>
+                    <div class="pl-video-card__info">
+                      <p class="pl-video-card__title">{{ video.title }}</p>
+                      <p class="pl-video-card__channel">{{ video.channelName }}</p>
+                    </div>
+                  </a>
+                </div>
+              }
+            </div>
+          }
+
+        </div>
+      }
+    </div>
+  }
+</div>
+
+<!-- Create Playlist Dialog -->
+@if (isDialogOpen) {
+  <div class="pl-dialog-overlay" (click)="closeDialog()">
+    <div class="pl-dialog" (click)="$event.stopPropagation()">
+
+      <div class="pl-dialog-header">
+        <h2>New Playlist</h2>
+        <button class="pl-dialog-close" (click)="closeDialog()">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+
+      <div class="pl-dialog-body">
+        @if (createError) {
+          <p class="pl-dialog-error">{{ createError }}</p>
+        }
+        @if (createSuccess) {
+          <p class="pl-dialog-success">{{ createSuccess }}</p>
+        }
+
+        <div class="pl-dialog-field">
+          <label for="plName">Name <span class="required">*</span></label>
+          <input
+            id="plName"
+            type="text"
+            [(ngModel)]="newPlaylistName"
+            placeholder="e.g. My Favorites"
+            (keyup.enter)="submitCreatePlaylist()"
+          />
+        </div>
+        <div class="pl-dialog-field">
+          <label for="plDesc">Description</label>
+          <textarea
+            id="plDesc"
+            rows="3"
+            [(ngModel)]="newPlaylistDesc"
+            placeholder="Optional description..."
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="pl-dialog-actions">
+        <button class="pl-dialog-cancel" (click)="closeDialog()">Cancel</button>
+        <button class="pl-dialog-submit" [disabled]="isCreating" (click)="submitCreatePlaylist()">
+          {{ isCreating ? 'Creating...' : 'Create Playlist' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+}
+

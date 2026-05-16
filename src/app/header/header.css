@@ -1,0 +1,190 @@
+.header__auth-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: #606060;
+}
+
+.header__auth-link span {
+  font-size: 14px;
+}
+
+.header__change-pwd-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.header__change-pwd-btn:hover {
+  background: #e8e8e8;
+}
+
+.header__change-pwd-btn .material-icons {
+  color: #606060;
+  font-size: 22px !important;
+}
+
+/* Dialog overlay */
+.cpwd-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.cpwd-dialog {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 440px;
+}
+
+.cpwd-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.cpwd-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: #0f0f0f;
+}
+
+.cpwd-close {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  color: #606060;
+  transition: background 0.2s, color 0.2s;
+}
+
+.cpwd-close:hover {
+  background: #f0f0f0;
+  color: #0f0f0f;
+}
+
+.cpwd-close .material-icons {
+  font-size: 22px !important;
+}
+
+.cpwd-body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cpwd-error {
+  margin: 0;
+  padding: 10px 12px;
+  background: #ffebee;
+  color: #b71c1c;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.cpwd-success {
+  margin: 0;
+  padding: 10px 12px;
+  background: #e8f5e9;
+  color: #1b5e20;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.cpwd-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cpwd-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f0f0f;
+}
+
+.cpwd-field input {
+  padding: 10px 12px;
+  border: 1px solid #d3d3d3;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.cpwd-field input:hover {
+  border-color: #0f0f0f;
+}
+
+.cpwd-field input:focus {
+  outline: none;
+  border-color: #1565c0;
+  box-shadow: 0 0 0 2px rgba(21, 101, 192, 0.1);
+}
+
+.cpwd-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.cpwd-cancel-btn {
+  padding: 9px 20px;
+  border: 1px solid #d3d3d3;
+  border-radius: 6px;
+  background: #fff;
+  color: #0f0f0f;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cpwd-cancel-btn:hover {
+  background: #f0f0f0;
+}
+
+.cpwd-submit-btn {
+  padding: 9px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #1565c0;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cpwd-submit-btn:hover:not(:disabled) {
+  background: #1040a2;
+}
+
+.cpwd-submit-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+

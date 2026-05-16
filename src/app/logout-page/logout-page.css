@@ -1,0 +1,32 @@
+.logout-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: #f9f9f9;
+  padding: 24px;
+}
+
+.logout-card {
+  width: min(100%, 480px);
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+}
+
+.logout-card h1 {
+  margin-bottom: 12px;
+}
+
+.logout-card p {
+  color: #606060;
+  margin-bottom: 20px;
+}
+
+.logout-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+

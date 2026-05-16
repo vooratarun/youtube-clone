@@ -1,0 +1,76 @@
+<div class="header">
+  <div class="header__left">
+    <i id="menu" class="material-icons" (click)="onMenuToggle()">menu</i>
+    <img src="https://cdn.mos.cms.futurecdn.net/8gzcr6RpGStvZFA2qRt4v6.jpg" alt="" />
+  </div>
+
+  <div class="header__search">
+    <form action="" (submit)="$event.preventDefault()">
+      <input
+        type="text"
+        placeholder="Search"
+        [value]="searchQuery"
+        (input)="onSearchInput($event)"
+      />
+      <button><i class="material-icons">search</i></button>
+    </form>
+  </div>
+
+  <div class="header__icons">
+
+    @if (isLoggedIn) {
+      <button class="header__change-pwd-btn" (click)="openDialog()" title="Change password">
+        <i class="material-icons">lock</i>
+      </button>
+    }
+    <a class="header__auth-link" [routerLink]="authRoute">
+      <i class="material-icons display-this">account_circle</i>
+      <span>{{ authLabel }} ({{ authUsername }})</span>
+    </a>
+  </div>
+</div>
+
+<!-- Change Password Dialog -->
+@if (isDialogOpen) {
+  <div class="cpwd-overlay" (click)="closeDialog()">
+    <div class="cpwd-dialog" (click)="$event.stopPropagation()">
+
+      <div class="cpwd-header">
+        <h2>Change Password</h2>
+        <button class="cpwd-close" (click)="closeDialog()">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+
+      <div class="cpwd-body">
+        @if (errorMessage) {
+          <p class="cpwd-error">{{ errorMessage }}</p>
+        }
+        @if (successMessage) {
+          <p class="cpwd-success">{{ successMessage }}</p>
+        }
+
+        <div class="cpwd-field">
+          <label for="oldPwd">Current Password</label>
+          <input id="oldPwd" type="password" [(ngModel)]="oldPassword" placeholder="Enter current password" />
+        </div>
+        <div class="cpwd-field">
+          <label for="newPwd">New Password</label>
+          <input id="newPwd" type="password" [(ngModel)]="newPassword" placeholder="Enter new password" />
+        </div>
+        <div class="cpwd-field">
+          <label for="confirmPwd">Confirm New Password</label>
+          <input id="confirmPwd" type="password" [(ngModel)]="confirmPassword" placeholder="Confirm new password" (keyup.enter)="submitChangePassword()" />
+        </div>
+      </div>
+
+      <div class="cpwd-actions">
+        <button class="cpwd-cancel-btn" (click)="closeDialog()">Cancel</button>
+        <button class="cpwd-submit-btn" [disabled]="isSubmitting" (click)="submitChangePassword()">
+          {{ isSubmitting ? 'Saving...' : 'Change Password' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

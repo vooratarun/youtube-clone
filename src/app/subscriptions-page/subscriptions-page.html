@@ -1,0 +1,35 @@
+<div class="subscriptions-page">
+  <div class="subscriptions-topbar">
+    <a routerLink="/" class="subscriptions-link">Home</a>
+    <a [routerLink]="authRoute()" class="subscriptions-link">{{ authLabel() }}</a>
+  </div>
+
+  <h1>Subscriptions</h1>
+
+  @if (isLoading()) {
+    <p>Loading subscribed channels...</p>
+  } @else {
+    @if (errorMessage()) {
+      <p class="subscriptions-error">{{ errorMessage() }}</p>
+    }
+    @if (!channels().length) {
+      <p>No subscriptions yet.</p>
+    } @else {
+      <ul class="subscriptions-list">
+        @for (channel of channels(); track channel) {
+          <li class="subscriptions-item">
+            <span>{{ channel }}</span>
+            <button
+              class="subscriptions-unsubscribe-btn"
+              type="button"
+              [disabled]="unsubscribingChannel() !== null"
+              (click)="onUnsubscribe(channel)">
+              {{ unsubscribingChannel() === channel ? 'Unsubscribing...' : 'Unsubscribe' }}
+            </button>
+          </li>
+        }
+      </ul>
+    }
+  }
+</div>
+

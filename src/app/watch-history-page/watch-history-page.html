@@ -1,0 +1,68 @@
+<div class="history-page">
+  <div class="history-header">
+    <div class="history-header__left">
+      <a routerLink="/" class="history-back-link">
+        <i class="material-icons">arrow_back</i>
+        Home
+      </a>
+    </div>
+    <div class="history-header__title">
+      <i class="material-icons history-icon">history</i>
+      <h1>Watch History</h1>
+    </div>
+    <div class="history-header__right">
+      <a class="history-auth-link" [routerLink]="authRoute()">
+        <i class="material-icons">account_circle</i>
+        <span>{{ authLabel() }} ({{ authUsername() }})</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="history-content">
+    @if (isLoading()) {
+      <div class="history-status">
+        <i class="material-icons spinning">sync</i>
+        <p>Loading watch history...</p>
+      </div>
+    } @else if (errorMessage()) {
+      <div class="history-status error">
+        <i class="material-icons">error_outline</i>
+        <p>{{ errorMessage() }}</p>
+        <a routerLink="/login" class="history-login-link">Log in</a>
+      </div>
+    } @else if (isEmpty()) {
+      <div class="history-status">
+        <i class="material-icons history-empty-icon">history_toggle_off</i>
+        <p>No watch history yet.</p>
+        <a routerLink="/" class="history-back-link">Browse videos</a>
+      </div>
+    } @else {
+      <p class="history-count">{{ count() }} watched video{{ count() !== 1 ? 's' : '' }}</p>
+      <div class="history-list">
+        @for (item of items(); track item.id) {
+          <a class="history-card" [routerLink]="['/video', item.video.id]">
+            <div class="history-card__thumbnail">
+              <img [src]="item.video.thumbnailUrl" [alt]="item.video.title" />
+              <div class="history-card__overlay">
+                <i class="material-icons">play_circle_filled</i>
+              </div>
+            </div>
+            <div class="history-card__body">
+              <img class="history-card__author" [src]="item.video.authorImageUrl" [alt]="item.video.channelName" />
+              <div class="history-card__text">
+                <h2 class="history-card__title">{{ item.video.title }}</h2>
+                <p class="history-card__channel">{{ item.video.channelName }}</p>
+                <p class="history-card__meta">{{ item.video.meta }}</p>
+                @if (item.video.category || item.video.categoryName) {
+                  <span class="history-card__category">{{ item.video.category || item.video.categoryName }}</span>
+                }
+                <p class="history-card__watched-at">Watched at: {{ item.watchedAt }}</p>
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+    }
+  </div>
+</div>
+

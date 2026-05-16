@@ -1,0 +1,32 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <h1>Login</h1>
+    <p>Use your API credentials to continue.</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <label>
+        Username
+        <input type="text" formControlName="username" placeholder="Enter username" />
+      </label>
+
+      <label>
+        Password
+        <input type="password" formControlName="password" placeholder="Enter password" />
+      </label>
+
+      @if (loginError) {
+        <p class="auth-error">{{ loginError }}</p>
+      }
+
+      <button type="submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Logging in...' : 'Login' }}
+      </button>
+    </form>
+
+    <div class="auth-links">
+      <a routerLink="/register" class="auth-link">Create an account</a>
+      <a routerLink="/" class="auth-link">Back to Home</a>
+    </div>
+  </div>
+</div>
+

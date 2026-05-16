@@ -1,0 +1,45 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <h1>Register</h1>
+    <p>Create your account to continue.</p>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <label>
+        Name
+        <input type="text" formControlName="name" placeholder="Enter full name" />
+      </label>
+
+      <label>
+        Username
+        <input type="text" formControlName="username" placeholder="Choose username" />
+      </label>
+
+      <label>
+        Password
+        <input type="password" formControlName="password" placeholder="Minimum 6 characters" />
+      </label>
+
+      <label>
+        Role
+        <select formControlName="role">
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+      </label>
+
+      @if (registerError) {
+        <p class="auth-error">{{ registerError }}</p>
+      }
+
+      <button type="submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Creating account...' : 'Register' }}
+      </button>
+    </form>
+
+    <div class="auth-links">
+      <a routerLink="/login" class="auth-link">Already have an account? Login</a>
+      <a routerLink="/" class="auth-link">Back to Home</a>
+    </div>
+  </div>
+</div>
+
