@@ -5,7 +5,6 @@ import {
   ɵChangeDetectionScheduler as ChangeDetectionScheduler,
   ɵEffectScheduler as EffectScheduler
 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -13,6 +12,7 @@ import { AuthService } from '../auth.service';
 import { PlaylistService } from '../playlist.service';
 import { VideoCard, VideoComment } from '../video.model';
 import { VideosService } from '../videos.service';
+import { VideoDetailsApiService } from './video-details-api.service';
 import { VideoDetailsComponent } from './video-details';
 
 type VideoDetailsLike = {
@@ -56,11 +56,14 @@ describe('VideoDetailsComponent (Vitest)', () => {
   let routeVideoId: string | null;
   let currentUser: { id: number; username: string } | null;
 
-  const httpMock = {
-    get: vi.fn(),
-    post: vi.fn(),
-    delete: vi.fn(),
-    put: vi.fn()
+  const videoDetailsApiServiceMock = {
+    getVideoById: vi.fn(),
+    getSubscribeStatus: vi.fn(),
+    subscribeToChannel: vi.fn(),
+    unsubscribeFromChannel: vi.fn(),
+    getComments: vi.fn(),
+    postComment: vi.fn(),
+    updateComment: vi.fn()
   };
 
   const authServiceMock = {
@@ -107,7 +110,7 @@ describe('VideoDetailsComponent (Vitest)', () => {
       providers: [
         { provide: AuthService, useValue: authServiceMock },
         { provide: ActivatedRoute, useValue: activatedRouteMock },
-        { provide: HttpClient, useValue: httpMock },
+        { provide: VideoDetailsApiService, useValue: videoDetailsApiServiceMock },
         { provide: VideosService, useValue: videosServiceMock },
         { provide: PlaylistService, useValue: playlistServiceMock },
         { provide: ChangeDetectionScheduler, useValue: changeDetectionSchedulerMock },
@@ -125,7 +128,7 @@ describe('VideoDetailsComponent (Vitest)', () => {
 
     expect(component.isLoading).toBe(false);
     expect(component.errorMessage).toBe('Invalid video id.');
-    expect(httpMock.get).not.toHaveBeenCalled();
+    expect(videoDetailsApiServiceMock.getVideoById).not.toHaveBeenCalled();
   });
 
   it('loads video details, comments, like status, and playlists on init', () => {
@@ -147,21 +150,11 @@ describe('VideoDetailsComponent (Vitest)', () => {
       { id: 1, videoId: 7, userId: 12, username: 'demo', text: 'Nice!', createdAt: 'a', updatedAt: 'b' }
     ];
 
-    httpMock.get.mockImplementation((url: string) => {
-      if (url === 'http://localhost:3000/get-video/7') {
-        return of(apiVideo);
-      }
-
-      if (url === 'http://localhost:3000/users/12/subscribed-channels/Channel%207') {
-        return of({ userId: 12, channelName: 'Channel 7', subscribed: true });
-      }
-
-      if (url === 'http://localhost:3000/videos/7/comments') {
-        return of(apiComments);
-      }
-
-      return throwError(() => new Error(`Unexpected GET: ${url}`));
-    });
+    videoDetailsApiServiceMock.getVideoById.mockReturnValue(of(apiVideo));
+    videoDetailsApiServiceMock.getSubscribeStatus.mockReturnValue(
+      of({ userId: 12, channelName: 'Channel 7', subscribed: true })
+    );
+    videoDetailsApiServiceMock.getComments.mockReturnValue(of(apiComments));
 
     videosServiceMock.getVideoLikeStatus.mockReturnValue(of(true));
     playlistServiceMock.getUserPlaylists.mockReturnValue(
@@ -183,7 +176,7 @@ describe('VideoDetailsComponent (Vitest)', () => {
   });
 
   it('shows video loading error when video request fails', () => {
-    httpMock.get.mockReturnValueOnce(throwError(() => new Error('boom')));
+    videoDetailsApiServiceMock.getVideoById.mockReturnValueOnce(throwError(() => new Error('boom')));
 
     component.ngOnInit();
 
@@ -240,7 +233,7 @@ describe('VideoDetailsComponent (Vitest)', () => {
     component.onSubscribeToChannel();
 
     expect(component.subscribeError).toBe('You must be logged in to subscribe to channels.');
-    expect(httpMock.post).not.toHaveBeenCalled();
+    expect(videoDetailsApiServiceMock.subscribeToChannel).not.toHaveBeenCalled();
   });
 
   it('subscribes to channel for a logged-in user', () => {
@@ -253,14 +246,11 @@ describe('VideoDetailsComponent (Vitest)', () => {
       channelName: 'Channel 9',
       meta: 'meta'
     };
-    httpMock.post.mockReturnValue(of(void 0));
+    videoDetailsApiServiceMock.subscribeToChannel.mockReturnValue(of(void 0));
 
     component.onSubscribeToChannel();
 
-    expect(httpMock.post).toHaveBeenCalledWith(
-      'http://localhost:3000/users/4/subscribed-channels/Channel%209',
-      {}
-    );
+    expect(videoDetailsApiServiceMock.subscribeToChannel).toHaveBeenCalledWith(4, 'Channel 9');
     expect(component.isSubscribed).toBe(true);
     expect(component.subscribeSuccess).toBe('Subscribed to channel.');
   });
@@ -276,13 +266,11 @@ describe('VideoDetailsComponent (Vitest)', () => {
       meta: 'meta'
     };
     component.isSubscribed = true;
-    httpMock.delete.mockReturnValue(of(void 0));
+    videoDetailsApiServiceMock.unsubscribeFromChannel.mockReturnValue(of(void 0));
 
     component.onSubscribeToChannel();
 
-    expect(httpMock.delete).toHaveBeenCalledWith(
-      'http://localhost:3000/users/4/subscribed-channels/Channel%209'
-    );
+    expect(videoDetailsApiServiceMock.unsubscribeFromChannel).toHaveBeenCalledWith(4, 'Channel 9');
     expect(component.isSubscribed).toBe(false);
     expect(component.subscribeSuccess).toBe('Unsubscribed from channel.');
   });
@@ -317,13 +305,13 @@ describe('VideoDetailsComponent (Vitest)', () => {
     };
     component.newCommentText = '  hello world  ';
 
-    httpMock.post.mockReturnValue(
+    videoDetailsApiServiceMock.postComment.mockReturnValue(
       of({ id: 99, videoId: 7, userId: 4, username: 'demo', text: '  hello world  ', createdAt: 'c', updatedAt: 'u' })
     );
 
     component.onPostComment();
 
-    expect(httpMock.post).toHaveBeenCalledWith('http://localhost:3000/videos/7/comments', { text: 'hello world' });
+    expect(videoDetailsApiServiceMock.postComment).toHaveBeenCalledWith(7, 'hello world');
     expect(component.comments[0].text).toBe('hello world');
     expect(component.newCommentText).toBe('');
     expect(component.postCommentSuccess).toBe('Comment posted.');
@@ -384,13 +372,13 @@ describe('VideoDetailsComponent (Vitest)', () => {
     component.startEditComment(component.comments[0]);
     component.editCommentText = '  new text  ';
 
-    httpMock.put.mockReturnValue(
+    videoDetailsApiServiceMock.updateComment.mockReturnValue(
       of({ id: 30, videoId: 7, userId: 4, username: 'demo', text: '  new text  ', createdAt: 'a', updatedAt: 'b' })
     );
 
     component.submitEditComment();
 
-    expect(httpMock.put).toHaveBeenCalledWith('http://localhost:3000/comments/30', { text: 'new text' });
+    expect(videoDetailsApiServiceMock.updateComment).toHaveBeenCalledWith(30, 'new text');
     expect(component.comments[0].text).toBe('new text');
     expect(component.editingCommentId).toBeNull();
     expect(component.editCommentText).toBe('');

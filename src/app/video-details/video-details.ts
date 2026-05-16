@@ -1,16 +1,12 @@
 import { Component, OnInit, effect, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { ApiVideo, ApiVideoComment, Playlist, VideoCard, VideoComment } from '../video.model';
 import { PlaylistService } from '../playlist.service';
 import { VideosService } from '../videos.service';
-
-type VideoByIdApiResponse = ApiVideo | { data?: ApiVideo | null; video?: ApiVideo | null };
-type VideoCommentsApiResponse = ApiVideoComment[] | { data?: ApiVideoComment[]; comments?: ApiVideoComment[] };
-type SubscribeStatusApiResponse = { userId?: number; channelName?: string; subscribed?: boolean };
+import { VideoDetailsApiService, VideoByIdApiResponse } from './video-details-api.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-video-details',
@@ -21,8 +17,7 @@ type SubscribeStatusApiResponse = { userId?: number; channelName?: string; subsc
 export class VideoDetailsComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly route = inject(ActivatedRoute);
-  private readonly http = inject(HttpClient);
-  private readonly videoByIdApiUrl = 'http://localhost:3000/get-video';
+  private readonly videoDetailsApiService = inject(VideoDetailsApiService);
 
   protected video: VideoCard | null = null;
   protected isLoading = true;
@@ -128,7 +123,7 @@ export class VideoDetailsComponent implements OnInit {
 
     this.isLoading = true;
     this.errorMessage = '';
-    this.http.get<VideoByIdApiResponse>(`${this.videoByIdApiUrl}/${id}`).subscribe({
+    this.videoDetailsApiService.getVideoById(id).subscribe({
       next: (response) => {
         const rawVideo = this.extractVideo(response);
         this.video = rawVideo
@@ -253,9 +248,7 @@ export class VideoDetailsComponent implements OnInit {
     this.isSubscribeSubmitting = true;
 
     if (this.isSubscribed) {
-      this.http.delete<void>(
-        `http://localhost:3000/users/${userId}/subscribed-channels/${encodeURIComponent(channelName)}`
-      ).subscribe({
+      this.videoDetailsApiService.unsubscribeFromChannel(userId, channelName).subscribe({
         next: () => {
           this.isSubscribeSubmitting = false;
           this.isSubscribed = false;
@@ -269,10 +262,7 @@ export class VideoDetailsComponent implements OnInit {
       return;
     }
 
-    this.http.post<void>(
-      `http://localhost:3000/users/${userId}/subscribed-channels/${encodeURIComponent(channelName)}`,
-      {}
-    ).subscribe({
+    this.videoDetailsApiService.subscribeToChannel(userId, channelName).subscribe({
       next: () => {
         this.isSubscribeSubmitting = false;
         this.isSubscribed = true;
@@ -307,9 +297,7 @@ export class VideoDetailsComponent implements OnInit {
       return;
     }
 
-    this.http.get<SubscribeStatusApiResponse>(
-      `http://localhost:3000/users/${userId}/subscribed-channels/${encodeURIComponent(normalizedChannelName)}`
-    ).subscribe({
+    this.videoDetailsApiService.getSubscribeStatus(userId, normalizedChannelName).subscribe({
       next: (response) => {
         this.isSubscribed = Boolean(response?.subscribed);
       },
@@ -345,7 +333,7 @@ export class VideoDetailsComponent implements OnInit {
     this.postCommentError = '';
     this.postCommentSuccess = '';
 
-    this.http.post<ApiVideoComment>(`http://localhost:3000/videos/${videoId}/comments`, { text })
+    this.videoDetailsApiService.postComment(videoId, text)
       .subscribe({
         next: (comment) => {
           this.comments = [this.normalizeComment(comment, videoId), ...this.comments];
@@ -438,10 +426,7 @@ export class VideoDetailsComponent implements OnInit {
     this.isSubmittingEdit = true;
     this.editCommentError = '';
 
-    this.http.put<ApiVideoComment>(
-      `http://localhost:3000/comments/${this.editingCommentId}`,
-      { text }
-    ).subscribe({
+    this.videoDetailsApiService.updateComment(this.editingCommentId, text).subscribe({
       next: (updated) => {
         const normalized = this.normalizeComment(updated, videoId);
         this.comments = this.comments.map((c) =>
@@ -502,7 +487,7 @@ export class VideoDetailsComponent implements OnInit {
     this.commentsError = '';
     this.comments = [];
 
-    this.http.get<VideoCommentsApiResponse>(`http://localhost:3000/videos/${videoId}/comments`).subscribe({
+    this.videoDetailsApiService.getComments(videoId).subscribe({
       next: (response) => {
         const apiComments = Array.isArray(response)
           ? response

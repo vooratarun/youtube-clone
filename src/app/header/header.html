@@ -17,6 +17,10 @@
   </div>
 
   <div class="header__icons">
+    <button class="header__new-video-btn" (click)="onNewVideoClick()" title="Add new video">
+      <i class="material-icons">add_circle</i>
+      <span>New Video</span>
+    </button>
 
     @if (isLoggedIn) {
       <button class="header__change-pwd-btn" (click)="openDialog()" title="Change password">

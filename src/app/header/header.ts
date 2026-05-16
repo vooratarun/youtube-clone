@@ -20,6 +20,7 @@ export class HeaderComponent {
 
   @Output() menuToggle = new EventEmitter<void>();
   @Output() searchInput = new EventEmitter<Event>();
+  @Output() newVideoClick = new EventEmitter<void>();
 
   // change-password dialog state
   protected isDialogOpen = false;
@@ -40,6 +41,10 @@ export class HeaderComponent {
 
   onSearchInput(event: Event): void {
     this.searchInput.emit(event);
+  }
+
+  onNewVideoClick(): void {
+    this.newVideoClick.emit();
   }
 
   protected openDialog(): void {
@@ -89,4 +94,3 @@ export class HeaderComponent {
     });
   }
 }
-

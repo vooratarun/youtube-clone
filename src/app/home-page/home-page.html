@@ -6,6 +6,7 @@
   [authUsername]="authUsername()"
   (menuToggle)="toggleSidebar()"
   (searchInput)="onSearchInput($event)"
+  (newVideoClick)="openCreateVideoForm()"
 ></app-header>
 <!-- Header Ends -->
 
@@ -32,12 +33,6 @@
 
   <!-- Videos Section -->
   <div class="videos">
-    <div class="video-form-actions">
-      <button class="new-video-btn" (click)="openCreateVideoForm()" [disabled]="isUploadingVideo() || isDeletingVideo()">
-        New Video
-      </button>
-    </div>
-
     @if (isCreateVideoFormOpen()) {
       <app-video-form
         [isSubmitting]="isUploadingVideo()"

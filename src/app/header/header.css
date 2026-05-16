@@ -188,3 +188,30 @@
   cursor: not-allowed;
 }
 
+.header__new-video-btn {
+  border: none;
+  border-radius: 18px;
+  padding: 6px 10px;
+  background: #065fd4;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.header__new-video-btn:hover {
+  background: #0553b5;
+}
+
+.header__new-video-btn .material-icons {
+  color: #fff;
+  font-size: 18px !important;
+}
+
+.header__new-video-btn span {
+  color: #fff;
+  font-size: 12px;
+}
