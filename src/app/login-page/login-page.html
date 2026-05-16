@@ -1,32 +1,42 @@
 <div class="auth-page">
-  <div class="auth-card">
-    <h1>Login</h1>
-    <p>Use your API credentials to continue.</p>
+  <mat-card class="auth-card" appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>Login</mat-card-title>
+      <mat-card-subtitle>Use your API credentials to continue.</mat-card-subtitle>
+    </mat-card-header>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <label>
-        Username
-        <input type="text" formControlName="username" placeholder="Enter username" />
-      </label>
+    <mat-card-content>
+      <form class="auth-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="auth-field">
+          <mat-label>Username</mat-label>
+          <input matInput type="text" formControlName="username" placeholder="Enter username" />
+          @if (loginForm.controls.username.touched && loginForm.controls.username.invalid) {
+            <mat-error>Username is required.</mat-error>
+          }
+        </mat-form-field>
 
-      <label>
-        Password
-        <input type="password" formControlName="password" placeholder="Enter password" />
-      </label>
+        <mat-form-field appearance="outline" class="auth-field">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" formControlName="password" placeholder="Enter password" />
+          @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
+            <mat-error>Password is required.</mat-error>
+          }
+        </mat-form-field>
 
-      @if (loginError) {
-        <p class="auth-error">{{ loginError }}</p>
-      }
+        @if (loginError) {
+          <p class="auth-error">{{ loginError }}</p>
+        }
 
-      <button type="submit" [disabled]="isSubmitting">
-        {{ isSubmitting ? 'Logging in...' : 'Login' }}
-      </button>
-    </form>
+        <button mat-flat-button color="primary" type="submit" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Logging in...' : 'Login' }}
+        </button>
+      </form>
+    </mat-card-content>
 
-    <div class="auth-links">
-      <a routerLink="/register" class="auth-link">Create an account</a>
-      <a routerLink="/" class="auth-link">Back to Home</a>
-    </div>
-  </div>
+    <mat-card-actions class="auth-links">
+      <a mat-button routerLink="/register" class="auth-link">Create an account</a>
+      <a mat-button routerLink="/" class="auth-link">Back to Home</a>
+    </mat-card-actions>
+  </mat-card>
 </div>
 

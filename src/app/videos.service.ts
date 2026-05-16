@@ -135,6 +135,12 @@ export class VideosService {
     return this.hasMore$();
   }
 
+  getUserVideos(userId: number): Observable<VideoCard[]> {
+    return this.http.get<VideosApiResponse>(`http://localhost:3000/users/${userId}/videos`).pipe(
+      map((response) => this.normalizeVideos(response))
+    );
+  }
+
   uploadVideo(payload: VideoUploadPayload): Observable<unknown> {
     return this.http.post(this.uploadVideoApiUrl, this.toApiVideoPayload(payload));
   }

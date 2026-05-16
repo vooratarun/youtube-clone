@@ -26,10 +26,13 @@ type HomePageLike = {
   likeError: () => string;
   likedVideoIds: () => Set<number>;
   isSidebarVisible: () => boolean;
+  isCreateVideoFormOpen: () => boolean;
+  openCreateVideoForm: () => void;
   onSearchInput: (event: Event) => void;
   onCategorySelect: (categoryId: number | null) => void;
   onPrimaryCategorySelect: (category: { id: number; icon: string; label: string }) => void;
   onLikeVideo: (video: VideoCard) => void;
+  onEditVideo: (video: VideoCard) => void;
 };
 
 const videoFixture: VideoCard = {
@@ -160,6 +163,25 @@ describe('HomePageComponent (Vitest)', () => {
     expect(component.isSidebarVisible()).toBe(false);
   });
 
+  it('navigates logged-in users to my videos page from primary sidebar', () => {
+    currentUser = { id: 99, username: 'demo' };
+    (component as any).isSidebarVisible.set(true);
+
+    component.onPrimaryCategorySelect({ id: 4, icon: 'my_library_add', label: 'My Videos' });
+
+    expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/my-videos');
+    expect(component.isSidebarVisible()).toBe(false);
+  });
+
+  it('redirects guests to login when clicking my videos from primary sidebar', () => {
+    (component as any).isSidebarVisible.set(true);
+
+    component.onPrimaryCategorySelect({ id: 4, icon: 'my_library_add', label: 'My Videos' });
+
+    expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/login');
+    expect(component.isSidebarVisible()).toBe(false);
+  });
+
   it('search input resets trending mode and calls search API', () => {
     (component as any).isTrendingMode.set(true);
 
@@ -230,5 +252,21 @@ describe('HomePageComponent (Vitest)', () => {
 
     expect(component.likedVideoIds().has(videoFixture.id)).toBe(false);
     expect(videosServiceMock.unlikeVideo).toHaveBeenCalledWith(99, videoFixture.id);
+  });
+
+  it('opens create video form when new-video action is triggered', () => {
+    expect(component.isCreateVideoFormOpen()).toBe(false);
+
+    component.openCreateVideoForm();
+
+    expect(component.isCreateVideoFormOpen()).toBe(true);
+  });
+
+  it('opens the form in edit mode when editing a video', () => {
+    expect(component.isCreateVideoFormOpen()).toBe(false);
+
+    component.onEditVideo(videoFixture);
+
+    expect(component.isCreateVideoFormOpen()).toBe(true);
   });
 });

@@ -1,0 +1,75 @@
+.my-videos-page {
+  min-height: 100vh;
+  background: #f5f7fb;
+}
+
+.my-videos-topbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 12px;
+}
+
+.my-videos-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.my-videos-content h1 {
+  margin: 0 0 18px;
+}
+
+.my-videos-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #5f6368;
+}
+
+.my-videos-status-card {
+  max-width: 520px;
+}
+
+.my-videos-status-card mat-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.my-videos-status-card.error mat-icon,
+.my-videos-error {
+  color: #b71c1c;
+}
+
+.my-videos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.my-videos-card {
+  overflow: hidden;
+}
+
+.my-videos-thumbnail {
+  text-decoration: none;
+  width: 100%;
+  height: 100%;
+}
+
+.my-videos-card mat-card-content {
+  display: grid;
+  gap: 4px;
+}
+
+.my-videos-card h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.my-videos-card p {
+  margin: 0;
+  color: #606060;
+  font-size: 13px;
+}

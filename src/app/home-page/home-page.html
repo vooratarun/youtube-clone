@@ -32,16 +32,26 @@
 
   <!-- Videos Section -->
   <div class="videos">
-    <app-video-form
-      [isSubmitting]="isUploadingVideo()"
-      [resetKey]="videoFormResetKey()"
-      [isEditMode]="isEditMode()"
-      [initialData]="selectedVideoForEdit()"
-      (submitVideo)="onVideoSubmit($event)"
-    ></app-video-form>
+    <div class="video-form-actions">
+      <button class="new-video-btn" (click)="openCreateVideoForm()" [disabled]="isUploadingVideo() || isDeletingVideo()">
+        New Video
+      </button>
+    </div>
+
+    @if (isCreateVideoFormOpen()) {
+      <app-video-form
+        [isSubmitting]="isUploadingVideo()"
+        [resetKey]="videoFormResetKey()"
+        [isEditMode]="isEditMode()"
+        [initialData]="selectedVideoForEdit()"
+        (submitVideo)="onVideoSubmit($event)"
+      ></app-video-form>
+    }
 
     @if (isEditMode()) {
       <button class="cancel-edit-btn" (click)="onCancelEdit()">Cancel Edit</button>
+    } @else if (isCreateVideoFormOpen()) {
+      <button class="cancel-edit-btn" (click)="closeCreateVideoForm()">Cancel Create</button>
     }
 
     @if (uploadVideoSuccess()) {

@@ -49,6 +49,7 @@ export interface VideoCardAdd {
   categoryId: number;
   categoryName: string;
   meta: string;
+  userId?: number;
 }
 
 export type VideoUploadPayload = VideoCardAdd;
@@ -78,4 +79,3 @@ export type ApiWatchHistoryItem = {
   watchedAt?: string;
   video?: ApiVideo | null;
 };
-

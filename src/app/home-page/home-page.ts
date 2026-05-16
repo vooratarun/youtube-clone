@@ -52,10 +52,13 @@ export class HomePageComponent implements OnInit {
   protected readonly newCategoryName = signal('');
   protected readonly createCategoryError = signal('');
   protected readonly isCreatingCategory = signal(false);
+  protected readonly isCreateVideoFormOpen = signal(false);
   protected readonly primarySidebarCategories: SidebarCategory[] = [
     { id: 1, icon: 'home', label: 'Home' },
     { id: 2, icon: 'local_fire_department', label: 'Trending' },
-    { id: 3, icon: 'subscriptions', label: 'Subscriptions' }
+    { id: 3, icon: 'subscriptions', label: 'Subscriptions' },
+    { id: 4, icon: 'my_library_add', label: 'My Videos' }
+
   ];
   protected readonly librarySidebarCategories: SidebarCategory[] = [
     { id: 2, icon: 'history', label: 'History', route: '/watch-history' },
@@ -93,7 +96,6 @@ export class HomePageComponent implements OnInit {
     effect(() => {
       const response = this.videosService.getAllVideos();
       const hasCategoryFilter = this.selectedCategoryId() !== null;
-      const isTrendingView = this.isTrendingMode();
 
       // Category and trending views manage their own video lists.
       if (hasCategoryFilter ) {
@@ -121,6 +123,7 @@ export class HomePageComponent implements OnInit {
         this.isUploadingVideo.set(false);
         this.uploadVideoSuccess.set('Video uploaded successfully.');
         this.videoFormResetKey.update((value) => value + 1);
+        this.isCreateVideoFormOpen.set(false);
         this.isLoadingVideos.set(true);
         this.videosService.getAllAPI();
       } else if (response.status === 'ERROR') {
@@ -189,8 +192,26 @@ export class HomePageComponent implements OnInit {
   protected onEditVideo(video: VideoCard): void {
     this.selectedVideoForEdit.set(video);
     this.isEditMode.set(true);
+    this.isCreateVideoFormOpen.set(true);
     this.uploadVideoError.set('');
     this.uploadVideoSuccess.set('');
+  }
+
+  protected openCreateVideoForm(): void {
+    this.isCreateVideoFormOpen.set(true);
+    this.isEditMode.set(false);
+    this.selectedVideoForEdit.set(null);
+    this.videoFormResetKey.update((value) => value + 1);
+    this.uploadVideoError.set('');
+    this.uploadVideoSuccess.set('');
+  }
+
+  protected closeCreateVideoForm(): void {
+    this.isCreateVideoFormOpen.set(false);
+    this.isEditMode.set(false);
+    this.selectedVideoForEdit.set(null);
+    this.videoFormResetKey.update((value) => value + 1);
+    this.uploadVideoError.set('');
   }
 
   protected onCancelEdit(): void {
@@ -360,6 +381,16 @@ export class HomePageComponent implements OnInit {
     if (normalizedLabel === 'subscriptions' || normalizedLabel === 'subcriptions') {
       this.collapseSidebar();
       this.router.navigateByUrl('/subscriptions');
+      return;
+    }
+
+    if (normalizedLabel === 'my videos' || normalizedLabel === 'my-videos') {
+      this.collapseSidebar();
+      if (!this.authService.currentUser()?.id) {
+        this.router.navigateByUrl('/login');
+        return;
+      }
+      this.router.navigateByUrl('/my-videos');
       return;
     }
 

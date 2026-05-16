@@ -400,3 +400,28 @@
   cursor: not-allowed;
 }
 
+.video-form-actions {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 12px;
+}
+
+.new-video-btn {
+  border: none;
+  border-radius: 18px;
+  padding: 8px 14px;
+  background: #065fd4;
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.new-video-btn:hover:not(:disabled) {
+  background: #0553b5;
+}
+
+.new-video-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '../auth.service';
 import { CategoryOption, CategoryService } from '../category.service';
 import { VideoCard, VideoUploadPayload } from '../video.model';
 
@@ -12,6 +13,7 @@ import { VideoCard, VideoUploadPayload } from '../video.model';
 export class VideoFormComponent implements OnChanges, OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly categoryService = inject(CategoryService);
+  private readonly authService = inject(AuthService);
 
   @Input() isSubmitting = false;
   @Input() resetKey = 0;
@@ -29,10 +31,12 @@ export class VideoFormComponent implements OnChanges, OnInit {
     title: ['', Validators.required],
     channelName: ['', Validators.required],
     categoryId: [1, Validators.required],
-    meta: ['', Validators.required]
+    meta: ['', Validators.required],
+    userId: [null as number | null]
   });
 
   ngOnInit(): void {
+    this.syncUserIdInForm();
     this.loadCategories();
   }
 
@@ -45,7 +49,8 @@ export class VideoFormComponent implements OnChanges, OnInit {
         title: '',
         channelName: '',
         categoryId: this.defaultCategory.id,
-        meta: ''
+        meta: '',
+        userId: this.authService.currentUser()?.id ?? null
       });
     }
 
@@ -57,9 +62,12 @@ export class VideoFormComponent implements OnChanges, OnInit {
         title: this.initialData.title ?? '',
         channelName: this.initialData.channelName ?? '',
         categoryId: this.resolveInitialCategoryId(),
-        meta: this.initialData.meta ?? ''
+        meta: this.initialData.meta ?? '',
+        userId: this.authService.currentUser()?.id ?? null
       });
     }
+
+    this.syncUserIdInForm();
   }
 
   protected onSubmit(): void {
@@ -70,8 +78,7 @@ export class VideoFormComponent implements OnChanges, OnInit {
 
     const formValue = this.videoForm.getRawValue();
     const selectedCategory = this.getCategoryById(formValue.categoryId) ?? this.defaultCategory;
-
-    this.submitVideo.emit({
+    const payload: VideoUploadPayload = {
       thumbnailUrl: formValue.thumbnailUrl,
       videoSourceUrl: formValue.videoSourceUrl,
       authorImageUrl: formValue.authorImageUrl,
@@ -80,7 +87,13 @@ export class VideoFormComponent implements OnChanges, OnInit {
       categoryId: selectedCategory.id,
       categoryName: selectedCategory.name,
       meta: formValue.meta
-    });
+    };
+
+    if (typeof formValue.userId === 'number') {
+      payload.userId = formValue.userId;
+    }
+
+    this.submitVideo.emit(payload);
   }
 
   protected get formTitle(): string {
@@ -138,6 +151,10 @@ export class VideoFormComponent implements OnChanges, OnInit {
     }
 
     return this.defaultCategory.id;
+  }
+
+  private syncUserIdInForm(): void {
+    this.videoForm.controls.userId.setValue(this.authService.currentUser()?.id ?? null, { emitEvent: false });
   }
 
   private getCategoryById(categoryId: number): CategoryOption | undefined {

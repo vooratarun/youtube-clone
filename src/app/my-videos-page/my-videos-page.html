@@ -1,0 +1,60 @@
+<div class="my-videos-page">
+  <mat-toolbar class="my-videos-topbar">
+    <a mat-button routerLink="/">
+      <mat-icon>home</mat-icon>
+      Home
+    </a>
+    <a mat-button [routerLink]="authRoute">
+      <mat-icon>account_circle</mat-icon>
+      {{ authLabel }} ({{ authUsername }})
+    </a>
+  </mat-toolbar>
+
+  <section class="my-videos-content">
+    <h1>My Videos</h1>
+
+    @if (isLoading()) {
+      <div class="my-videos-status">
+        <mat-spinner diameter="36"></mat-spinner>
+        <p>Loading your videos...</p>
+      </div>
+    } @else {
+      @if (errorMessage()) {
+        <mat-card class="my-videos-status-card error" appearance="outlined">
+          <mat-card-content>
+            <mat-icon>error_outline</mat-icon>
+            <p class="my-videos-error">{{ errorMessage() }}</p>
+            <a mat-flat-button color="primary" routerLink="/login">Log in</a>
+          </mat-card-content>
+        </mat-card>
+      } @else if (!myVideos().length) {
+        <mat-card class="my-videos-status-card" appearance="outlined">
+          <mat-card-content>
+            <mat-icon>video_library</mat-icon>
+            <p>You have not uploaded any videos yet.</p>
+            <a mat-button color="primary" routerLink="/">Back to Home</a>
+          </mat-card-content>
+        </mat-card>
+      } @else {
+        <div class="my-videos-grid">
+          @for (video of myVideos(); track video.id) {
+            <mat-card class="my-videos-card" appearance="outlined">
+              <a class="my-videos-thumbnail" [routerLink]="['/video', video.id]">
+                <img mat-card-image [src]="video.thumbnailUrl" [alt]="video.title" />
+              </a>
+              <mat-card-content>
+                <h3>{{ video.title }}</h3>
+                <p>{{ video.channelName }}</p>
+                <p>{{ video.meta }}</p>
+              </mat-card-content>
+              <mat-card-actions>
+                <a mat-button color="primary" [routerLink]="['/video', video.id]">Watch</a>
+              </mat-card-actions>
+            </mat-card>
+          }
+        </div>
+      }
+    }
+  </section>
+</div>
+

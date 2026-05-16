@@ -2,7 +2,7 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from './auth.service';
 
-const AUTH_REQUIRED_URL_PATTERN = /\/users\/\d+\/liked-videos|\/delete-video\/\d+|\/videos\/\d+\/comments|\/comments\/\d+|\/change-password|\/users\/\d+\/playlists|\/users\/\d+\/watch-history(?:\/\d+)?|\/users\/\d+\/settings|\/users\/\d+\/subscribed-channels(?:\/|$)/;
+const AUTH_REQUIRED_URL_PATTERN = /\/users\/\d+\/liked-videos|\/delete-video\/\d+|\/videos\/\d+\/comments|\/comments\/\d+|\/change-password|\/users\/\d+\/playlists|\/users\/\d+\/watch-history(?:\/\d+)?|\/users\/\d+\/settings|\/users\/\d+\/subscribed-channels(?:\/|$)|\/users\/\d+\/videos(?:\/|$)/;
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
